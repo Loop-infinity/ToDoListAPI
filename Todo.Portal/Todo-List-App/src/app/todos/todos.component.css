@@ -1,0 +1,10 @@
+.task-completed{
+    text-decoration: line-through;
+}
+
+
+/* @media screen and (max-width: 800px) {
+    .space {
+      margin-left: 10px; 
+    }
+} */
