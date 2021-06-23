@@ -20,7 +20,7 @@ namespace ToDoListAPI.Controllers
         {
             _db = db;
         }
-
+        //test
         [HttpGet]
         public IEnumerable<TodoTask> GetTodos()
         {
@@ -190,8 +190,6 @@ namespace ToDoListAPI.Controllers
                 
 
             }
-
-
 
             return NoContent();
         }
