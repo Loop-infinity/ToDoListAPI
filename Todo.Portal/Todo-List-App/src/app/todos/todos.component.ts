@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Todo } from '../shared/Todo.model';
 import { TodosService } from '../shared/todos.service';
 import { TodoTask } from '../shared/TodoTask.model';
@@ -29,7 +30,7 @@ export class TodosComponent implements OnInit {
 
   value2: number=0;
 
-  constructor(public todosService: TodosService) { }
+  constructor(public todosService: TodosService,private router: Router) { }
 
   ngOnInit() {
     this.todosService.getTodoByDate(new Date())
@@ -201,6 +202,11 @@ export class TodosComponent implements OnInit {
 
   updatePendingTasksCount(){
     this.pendingTasksCount = this.todo.todoTasks.filter(task => task.isCompleted === false).length;
+  }
+
+  logout(){
+    localStorage.removeItem('token');
+    this.router.navigate(['/user/login']);
   }
 
   // addTodoItem(){

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using ToDoListAPI.Models;
 
 namespace ToDoListAPI.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -17,8 +18,12 @@ namespace ToDoListAPI.Models
 
         public DbSet<Todo> Todo { get; set; }
 
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<TodoTask>()
                 .Property(m => m.Title)
                 .IsRequired()
@@ -42,6 +47,8 @@ namespace ToDoListAPI.Models
             modelBuilder.Entity<Todo>()
                 .Property(m => m.Date)
                 .IsRequired();
+
+            modelBuilder.Entity<ApplicationUser>();
         }
     }
 }

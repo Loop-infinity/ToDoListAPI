@@ -8,6 +8,7 @@ namespace ToDoListAPI.Models
 {
     public class Todo
     {
+        [Key]
         public int Id { get; set; }
 
         public DateTime Date { get; set; }

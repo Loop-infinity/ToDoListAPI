@@ -9,6 +9,7 @@ namespace ToDoListAPI.Models
 {
     public class TodoTask
     {
+        [Key]
         public int Id { get; set; }
         
         public string Title { get; set; }
