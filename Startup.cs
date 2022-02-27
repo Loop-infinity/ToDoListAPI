@@ -33,7 +33,7 @@ namespace ToDoListAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -42,7 +42,7 @@ namespace ToDoListAPI
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DevConnection")
+            options.UseNpgsql(Configuration.GetConnectionString("DevConnection")
             ));
 
             services.AddDefaultIdentity<ApplicationUser>()
