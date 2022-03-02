@@ -42,9 +42,9 @@ namespace ToDoListAPI
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DevConnection")
+            options.UseNpgsql(Configuration.GetConnectionString("ProdConnection")
             ));
-
+            
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             //validations for identity
@@ -79,6 +79,58 @@ namespace ToDoListAPI
                 };
             });
         }
+
+        // Development ConfigureServices
+        //public void ConfigureDevelopmentServices(IServiceCollection services)
+        //{
+        //    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+        //    services.AddControllers();
+        //    services.AddSwaggerGen(c =>
+        //    {
+        //        c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoListAPI", Version = "v1" });
+        //    });
+
+        //    // Use SQL Server
+        //    services.AddDbContext<ApplicationDbContext>(options =>
+        //        options.UseSqlServer(Configuration.GetConnectionString("DevConnection")
+        //    ));
+
+        //    services.AddDefaultIdentity<ApplicationUser>()
+        //        .AddEntityFrameworkStores<ApplicationDbContext>();
+        //    //validations for identity
+        //    services.Configure<IdentityOptions>(options =>
+        //    {
+        //        options.Password.RequireDigit = false;
+        //        options.Password.RequireNonAlphanumeric = false;
+        //        options.Password.RequireUppercase = false;
+        //    });
+
+        //    services.AddCors();
+
+        //    //Jwt Authentication
+
+        //    services.AddAuthentication(x => {
+        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        x.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+
+
+        //    }).AddJwtBearer(x => {
+        //        x.RequireHttpsMetadata = false; //remove https requirement
+        //        x.SaveToken = false;  // dont save token on server after successful auth
+        //        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        //        {
+        //            ValidateIssuerSigningKey = true,
+        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("1234567890123456")),
+        //            ValidateIssuer = false,
+        //            ValidateAudience = false,
+        //            ClockSkew = TimeSpan.Zero
+        //        };
+        //    });
+            
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
