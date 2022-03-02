@@ -55,7 +55,16 @@ namespace ToDoListAPI
                 options.Password.RequireUppercase = false;
             });
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:63660", "http://localhost:4200", "https://https://ruman-todo-app-frontend.herokuapp.com/")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
 
             //Jwt Authentication
 
