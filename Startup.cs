@@ -147,7 +147,7 @@ namespace ToDoListAPI
             dbContext.Database.Migrate();
 
             app.UseCors(options =>
-            options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+                options.WithOrigins("http://localhost:4200", "https://ruman-todo-app-frontend.herokuapp.com").AllowAnyMethod().AllowAnyHeader()
                 );
 
             //if (env.IsDevelopment())
