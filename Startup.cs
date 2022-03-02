@@ -60,7 +60,7 @@ namespace ToDoListAPI
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:63660", "http://localhost:4200", "https://https://ruman-todo-app-frontend.herokuapp.com/")
+                        builder.WithOrigins("https://localhost:63660", "http://localhost:4200", "https://ruman-todo-app-frontend.herokuapp.com")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
