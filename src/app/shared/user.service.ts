@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Login } from './Login.model';
 import { Register } from './Register.model';
 
@@ -15,7 +16,7 @@ export class UserService {
 
   constructor(private fb: FormBuilder,private http: HttpClient) { }
 
-  baseUrl: string = "http://localhost:36680/api/User";
+  baseUrl: string = environment.apiUrl + "User";
 
   // formModel = this.fb.group({
   //   UserName: [''],

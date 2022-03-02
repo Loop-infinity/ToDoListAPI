@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { TodoTask } from './TodoTask.model';
 import { catchError } from 'rxjs/operators'
 import { Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class TodosService {
   constructor(private http:HttpClient, private datePipe: DatePipe) { }
 
   testTodo: Todo = new Todo();
-  baseUrl: string = "http://localhost:36680/api/Todo";
+  baseUrl: string = environment.apiUrl + "Todo";
 
   todoInService: Todo = new Todo();
 
@@ -32,7 +33,7 @@ export class TodosService {
   postTask(todoTask: TodoTask, d: Date){
     let transformedDate = this.datePipe.transform(d, 'yyyy-MM-dd');
     let url = this.baseUrl + "?date=" + transformedDate +" 00:00:00.0000000";
-    
+
     return this.http.post(url,todoTask);
   }
 
