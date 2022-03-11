@@ -42,8 +42,7 @@ namespace ToDoListAPI
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("ProdConnection")
-            ));
+            options.UseNpgsql(Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")));
             
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
