@@ -22,27 +22,12 @@ namespace ToDoListAPI.Controllers
         {
             _db = db;
         }
-        //test
-        [HttpGet]
-        public IEnumerable<TodoTask> GetTodos()
-        {
-            var TodoList = from ta in _db.TodoTask
-                           join to in _db.Todo
-                           on ta.TodoId equals to.Id
-                           select new TodoTask
-                           {
-                               Id = ta.Id,
-                               Title = ta.Title,
-                               Description = ta.Description,
-
-                               Todo = to,
-
-                           };
-
-            return TodoList.ToList();
-            //return NotFound();
-        }
-
+ 
+        /// <summary>
+        /// Get todo item by date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         [HttpGet("{date}")]
         public ActionResult<TodoViewModel> GetTodos(DateTime date)
         {
@@ -68,78 +53,69 @@ namespace ToDoListAPI.Controllers
                 //Server Error
                 return new StatusCodeResult(500);
             }
-            
-            //var Todo = _db.Todo.Single(t => t.Date == date);
-            //var todoId = Todo.Id;
-            //var TodoTasks = _db.TodoTask.Where(to => to.TodoId == todoId).ToList();
-
-            //TodoViewModel todoViewModel = new TodoViewModel { Todo = Todo, TodoTasks = TodoTasks };
-
-            //return todoViewModel;
-            //return NotFound();
         }
 
+        /// <summary>
+        /// Add new Todo Task
+        /// </summary>
+        /// <param name="todoTaskViewModel"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Todo>> PostTodoTask(TodoTaskViewModel todoTaskViewModel, DateTime date)
         {
-            if(ModelState.IsValid)
+            try
             {
-                try
+                if (todoTaskViewModel.TodoId == 0)
                 {
-                    if (todoTaskViewModel.TodoId == 0)
+                    //Create Todo
+                    Todo todo = new Todo
                     {
-                        //Create Todo
-                        Todo todo = new Todo
+                        Id = 0,
+                        Date = date,
+                        TodoTasks = new()
                         {
-                            Id = 0,
-                            Date = date,
-                            TodoTasks = new()
+                            new TodoTask()
                             {
-                                new TodoTask()
-                                {
-                                    Title = todoTaskViewModel.Title,
-                                    Description = todoTaskViewModel.Description
-                                }
+                                Title = todoTaskViewModel.Title,
+                                Description = todoTaskViewModel.Description
                             }
-                        };
+                        }
+                    };
 
-                        _db.Todo.Add(todo);
-                    }
-                    else
-                    {
-                        //Add the task
-                        var todoTask = new TodoTask
-                        {
-                            Id = todoTaskViewModel.Id,
-                            Title = todoTaskViewModel.Title,
-                            Description = todoTaskViewModel.Description,
-                            TodoId = todoTaskViewModel.TodoId
-                        };
-
-                        _db.TodoTask.Add(todoTask);
-                        //await _db.SaveChangesAsync();
-                    }
-
-                    await _db.SaveChangesAsync();
-
-                    return CreatedAtAction("GetTodos", new { id = todoTaskViewModel.Id }, todoTaskViewModel);
+                    _db.Todo.Add(todo);
                 }
-                catch (Exception)
+                else
                 {
-                    return new StatusCodeResult(500);
-                }
-                //if Todo does not already exist
-                
-            }
-            else 
-            {
-                //validation
-            }
+                    //Add the task
+                    var todoTask = new TodoTask
+                    {
+                        Id = todoTaskViewModel.Id,
+                        Title = todoTaskViewModel.Title,
+                        Description = todoTaskViewModel.Description,
+                        TodoId = todoTaskViewModel.TodoId
+                    };
 
-            return NotFound();
-            
+                    _db.TodoTask.Add(todoTask);
+                    //await _db.SaveChangesAsync();
+                }
+
+                await _db.SaveChangesAsync();
+
+                return CreatedAtAction("GetTodos", new { id = todoTaskViewModel.Id }, todoTaskViewModel);
+            }
+            catch (Exception)
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
+        /// <summary>
+        /// Update existing Todo task
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="todoTask"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodoTask(int id, TodoTask todoTask)
         {
@@ -166,10 +142,15 @@ namespace ToDoListAPI.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("Todo Task Updated Successfully");
         }
 
         // DELETE: api/Todo/5
+        /// <summary>
+        /// Delete Existing Todo Task
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoTask(int id)
         {
@@ -189,13 +170,16 @@ namespace ToDoListAPI.Controllers
                     _db.Todo.Remove(todo);
                     await _db.SaveChangesAsync();
                 }
-                
-
             }
 
             return NoContent();
         }
 
+        /// <summary>
+        /// Check if Todo Task already exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool TodoTaskExists(int id)
         {
             return _db.TodoTask.Any(e => e.Id == id);
