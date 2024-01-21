@@ -59,7 +59,7 @@ namespace ToDoListAPI
                 options.AddDefaultPolicy(
                     builder =>
                     {
-                        builder.WithOrigins("https://localhost:63660", "http://localhost:4200", "https://ruman-todo-app-frontend.herokuapp.com")
+                        builder.WithOrigins("https://ruman-todo-app-frontend.herokuapp.com")
                                             .AllowAnyHeader()
                                             .AllowAnyMethod();
                     });
@@ -88,73 +88,86 @@ namespace ToDoListAPI
             });
         }
 
-        // Development ConfigureServices
-        //public void ConfigureDevelopmentServices(IServiceCollection services)
-        //{
-        //    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+        /// <summary>
+        /// Development ConfigureServices
+        /// </summary>
+        /// <param name="services"></param>
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-        //    services.AddControllers();
-        //    services.AddSwaggerGen(c =>
-        //    {
-        //        c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoListAPI", Version = "v1" });
-        //    });
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoListAPI", Version = "v1" });
+            });
 
-        //    // Use SQL Server
-        //    services.AddDbContext<ApplicationDbContext>(options =>
-        //        options.UseSqlServer(Configuration.GetConnectionString("DevConnection")
-        //    ));
+            // Use SQL Server
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")
+            ));
 
-        //    services.AddDefaultIdentity<ApplicationUser>()
-        //        .AddEntityFrameworkStores<ApplicationDbContext>();
-        //    //validations for identity
-        //    services.Configure<IdentityOptions>(options =>
-        //    {
-        //        options.Password.RequireDigit = false;
-        //        options.Password.RequireNonAlphanumeric = false;
-        //        options.Password.RequireUppercase = false;
-        //    });
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //validations for identity
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
 
-        //    services.AddCors();
-
-        //    //Jwt Authentication
-
-        //    services.AddAuthentication(x => {
-        //        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        x.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            //Jwt Authentication
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
 
 
-        //    }).AddJwtBearer(x => {
-        //        x.RequireHttpsMetadata = false; //remove https requirement
-        //        x.SaveToken = false;  // dont save token on server after successful auth
-        //        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        //        {
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("1234567890123456")),
-        //            ValidateIssuer = false,
-        //            ValidateAudience = false,
-        //            ClockSkew = TimeSpan.Zero
-        //        };
-        //    });
-            
-        //}
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false; //remove https requirement
+                x.SaveToken = false;  // dont save token on server after successful auth
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("1234567890123456")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
+
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext dbContext)
         {
-            dbContext.Database.Migrate();
+            //dbContext.Database.Migrate();
 
             app.UseCors(options =>
                 options.WithOrigins("http://localhost:4200", "https://ruman-todo-app-frontend.herokuapp.com").AllowAnyMethod().AllowAnyHeader()
                 );
 
-            //if (env.IsDevelopment())
-            //{
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDoListAPI v1"));
-            //}
+            }
 
             app.UseRouting();
 
